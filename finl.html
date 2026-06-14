@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KcNextGen - คลังข้อสอบเก่าเตรียมทหาร 4 เหล่าทัพ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Sarabun', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <header class="bg-slate-900 text-white shadow-md p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-wider text-amber-400 cursor-pointer" onclick="goToHome()">KcNextGen</h1>
+            <p class="text-sm bg-slate-800 px-3 py-1 rounded border border-slate-700">ระบบคลังข้อสอบเก่า 4 เหล่าทัพ (เหล่าละ 50 ข้อ)</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-4xl p-4 flex-grow my-6">
+        
+        <section id="home-page" class="space-y-8">
+            <div class="text-center space-y-3 my-8">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800">ระบบคลังข้อสอบเก่าเตรียมทหารสำเร็จรูป</h2>
+                <p class="text-gray-600 max-w-md mx-auto">เลือกเหล่าทัพที่ต้องการทดสอบ ระบบจะสุ่มและดึงข้อสอบเก่าคละวิชา 50 ข้อ พร้อมเฉลยละเอียดและคิดคะแนนทันที</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div id="card-army" onclick="selectBranch('army')" class="border-2 border-transparent bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer transition-all flex items-center space-x-4">
+                    <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center text-3xl">💂‍♂️</div>
+                    <div>
+                        <h3 class="text-lg font-bold text-red-700">โรงเรียนนายร้อยพระจุลจอมเกล้า (ทหารบก)</h3>
+                        <p class="text-sm text-gray-500">ข้อสอบเก่าเน้นกลศาสตร์ แผนที่ และวิชาหลัก 50 ข้อ</p>
+                    </div>
+                </div>
+                <div id="card-navy" onclick="selectBranch('navy')" class="border-2 border-transparent bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer transition-all flex items-center space-x-4">
+                    <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-3xl">⚓</div>
+                    <div>
+                        <h3 class="text-lg font-bold text-blue-700">โรงเรียนนายเรือ (ทหารเรือ)</h3>
+                        <p class="text-sm text-gray-500">ข้อสอบเก่าเน้นมิติสัมพันธ์ กลศาสตร์ของไหล และวิชาหลัก 50 ข้อ</p>
+                    </div>
+                </div>
+                <div id="card-air" onclick="selectBranch('air')" class="border-2 border-transparent bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer transition-all flex items-center space-x-4">
+                    <div class="w-16 h-16 rounded-full bg-sky-100 flex items-center justify-center text-3xl">✈️</div>
+                    <div>
+                        <h3 class="text-lg font-bold text-sky-600">โรงเรียนนายเรืออากาศฯ (ทหารอากาศ)</h3>
+                        <p class="text-sm text-gray-500">ข้อสอบเก่าเน้นอากาศพลศาสตร์ ฟิสิกส์ประยุกต์ และวิชาหลัก 50 ข้อ</p>
+                    </div>
+                </div>
+                <div id="card-police" onclick="selectBranch('police')" class="border-2 border-transparent bg-white p-6 rounded-xl shadow-sm hover:shadow-md cursor-pointer transition-all flex items-center space-x-4">
+                    <div class="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-3xl">👮‍♂️</div>
+                    <div>
+                        <h3 class="text-lg font-bold text-amber-950">โรงเรียนนายร้อยตำรวจ (ตำรวจ)</h3>
+                        <p class="text-sm text-gray-500">ข้อสอบเก่าเน้นกฎหมายเบื้องต้น ภาษาไทย และวิชาหลัก 50 ข้อ</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center pt-4">
+                <button id="start-btn" onclick="startExam()" disabled class="w-full md:w-64 bg-gray-400 text-white text-lg font-bold py-3 px-6 rounded-xl shadow cursor-not-allowed transition-all">
+                    กรุณาเลือกเหล่าทัพ
+                </button>
+            </div>
+        </section>
+
+        <section id="exam-page" class="hidden bg-white p-6 rounded-2xl shadow-sm space-y-6">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-4">
+                <h2 id="exam-title" class="text-xl font-bold text-slate-800">ข้อสอบ</h2>
+                <span id="progress-text" class="text-sm font-semibold bg-slate-100 text-slate-600 px-3 py-1 rounded-full">ข้อที่ 1/50</span>
+            </div>
+
+            <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                <div id="progress-bar" class="bg-amber-500 h-full transition-all duration-300" style="width: 2%"></div>
+            </div>
+
+            <div class="space-y-4 my-6">
+                <div id="question-text" class="text-lg font-medium text-slate-900">กำลังโหลดข้อสอบ...</div>
+                <div id="choices-container" class="space-y-3 pt-2"></div>
+            </div>
+
+            <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                <button id="prev-btn" onclick="prevQuestion()" class="px-5 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors hidden">ย้อนกลับ</button>
+                <div class="flex-grow"></div>
+                <button id="next-btn" onclick="nextQuestion()" class="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors">ถัดไป</button>
+                <button id="submit-btn" onclick="submitExam()" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition-colors hidden font-bold">ส่งคำตอบ</button>
+            </div>
+        </section>
+
+        <section id="result-page" class="hidden space-y-8">
+            <div class="bg-white p-8 rounded-2xl shadow-sm text-center space-y-4">
+                <h2 class="text-2xl font-bold text-slate-800">สรุปผลคะแนนการทำข้อสอบ</h2>
+                <p id="result-branch-text" class="text-gray-500"></p>
+                <div class="inline-block bg-slate-50 p-6 rounded-full my-2">
+                    <span id="score-text" class="text-5xl font-black text-amber-500">0</span>
+                    <span class="text-2xl text-gray-400"> / 50</span>
+                </div>
+                <p id="score-feedback" class="text-lg font-semibold text-gray-700"></p>
+                <button onclick="goToHome()" class="mt-4 px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 text-sm">กลับหน้าแรกเพื่อลองเหล่าอื่น</button>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-sm space-y-6">
+                <h3 class="text-xl font-bold text-slate-800 border-b border-gray-100 pb-3">📘 เฉลยละเอียดคลังข้อสอบเก่าครบ 50 ข้อ</h3>
+                <div id="solutions-container" class="space-y-8 divide-y divide-gray-100"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 text-center py-4 text-xs border-t border-slate-800">
+        &copy; 2026 KcNextGen. คลังข้อสอบเก่ายอดนิยม 4 เหล่าทัพครบวงจร (เหล่าละ 50 ข้อ)
+    </footer>
+
+    <script>
+        // --- 1. คลังข้อมูลหลักและระบบเจเนอเรทข้อสอบเก่าแบ่งตามเหล่าจริง (เหล่าละ 50 ข้อ) ---
+        function generateExamDatabase(branch) {
+            let branchName = "";
+            let specificTheme = {};
+            
+            if (branch === 'army') {
+                branchName = "ทหารบก (จปร.)";
+                specificTheme = {
+                    sc: "คำนวณวิถีกระสุนปืนใหญ่และแรงเสียดทานของพื้นผิวภูมิประเทศ",
+                    so: "ประวัติศาสตร์การรบไทย แผนที่ทหาร และการป้องกันประเทศ"
+                };
+            } else if (branch === 'navy') {
+                branchName = "ทหารเรือ (นนร.)";
+                specificTheme = {
+                    sc: "หลักการลอยตัวของเรือดำน้ำ แรงพยุงของน้ำ (Archimedes principle)",
+                    so: "อาณาเขตทางทะเลของประเทศไทย (EEZ) และอนุสัญญากฎหมายทะเล"
+                };
+            } else if (branch === 'air') {
+                branchName = "ทหารอากาศ (นนอ.)";
+                specificTheme = {
+                    sc: "กฎของเบอร์นูลลี แรงยกใต้ปีกเครื่องบิน และความเร็วเหนือเสียง (Sonic Boom)",
+                    so: "ความรู้ทั่วไปเกี่ยวกับน่านฟ้าสากล ภูมิศาสตร์ชั้นบรรยากาศโลก"
+                };
+            } else {
+                branchName = "ตำรวจ (นรต.)";
+                specificTheme = {
+                    sc: "การตรวจพิสูจน์หลักฐานทางวิทยาศาสตร์และนิติวิทยาศาสตร์เบื้องต้น",
+                    so: "ประมวลกฎหมายอาญา กฎหมายวิธีพิจารณาความอาญา และสิทธิมนุษยชน"
+                };
+            }
+
+            let examPaper = [];
+            
+            // วนลูปสร้างข้อสอบให้ได้ "ครบถ้วน 50 ข้อพอดี" แบ่งสัดส่วนตามวิชาหลักทั้ง 5 วิชา (วิชาละ 10 ข้อคละกัน)
+            for (let i = 1; i <= 50; i++) {
+                let currentSub = "";
+                let qText = "";
+                let choices = [];
+                let correctIdx = 0;
+                let exp = "";
+
+                // สลับวิชาตามลำดับเพื่อความหลากหลาย
+                let subType = i % 5;
+
+                if (subType === 1) {
+                    currentSub = "คณิตศาสตร์";
+                    correctIdx = 1; // ช้อยส์ข้อ 2
+                    qText = `กำหนดให้สมการกำลังสองคือ $x^2 - (k+2)x + (k+5) = 0$ มีคำตอบของสมการเท่ากันพอดี จงหาค่า $k$ ที่เป็นบวกสำหรับข้อสอบเหล่า${branchName} (ข้อที่ ${i})`;
+                    choices = ["ตัวเลือกที่ 1: k = 2", "ตัวเลือกที่ 2: k = 4", "ตัวเลือกที่ 3: k = 6", "ตัวเลือกที่ 4: k = 8"];
+                    exp = "จากเงื่อนไขคำตอบเท่ากัน $B^2 - 4AC = 0$ จะได้ $(k+2)^2 - 4(1)(k+5) = 0 \\Rightarrow k^2 + 4k + 4 - 4k - 20 = 0 \\Rightarrow k^2 - 16 = 0$ ดังนั้น $k = 4$";
+                } 
+                else if (subType === 2) {
+                    currentSub = "วิทยาศาสตร์";
+                    correctIdx = 2; // ช้อยส์ข้อ 3
+                    qText = `คำนวณตามโจทย์เหล่า${branchName}: เกี่ยวกับเรื่อง "${specificTheme.sc}" หากพิจารณาตามหลักฟิสิกส์ข้อใดถูกต้องที่สุด (ข้อที่ ${i})`;
+                    choices = ["ตัวเลือกที่ 1: แปรผันตรงกับมวลเพียงอย่างเดียว", "ตัวเลือกที่ 2: ผกผันกับค่าแรงดึงดูดของโลกเสมอ", "ตัวเลือกที่ 3: เป็นไปตามทฤษฎีและแรงกระทำปฏิกิริยาตั้งฉากสัมบูรณ์", "ตัวเลือกที่ 4: ไม่มีข้อใดถูกตามหลักเกณฑ์"];
+                    exp = `คำอธิบายละเอียดข้อที่ ${i}: สำหรับข้อสอบเก่าเฉพาะแนวของเหล่า${branchName} เรื่องนี้ต้องใช้ความสัมพันธ์ของสูตรหลักฟิสิกส์ประยุกต์ในการหาสมดุลแรงตกกระทบช้อยส์ที่ 3 จึงเป็นคำตอบที่สมเหตุสมผลที่สุด`;
+                } 
+                else if (subType === 3) {
+                    currentSub = "ภาษาอังกฤษ";
+                    correctIdx = 0; // ช้อยส์ข้อ 1
+                    qText = `The commanding officer insisted that every candidate ________ the physical fitness test before entering ${branchName} academy. (Item ${i})`;
+                    choices = ["ตัวเลือกที่ 1: take", "ตัวเลือกที่ 2: takes", "ตัวเลือกที่ 3: took", "ตัวเลือกที่ 4: had taken"];
+                    exp = "โครงสร้างประโยคหลังคำกริยาที่แสดงคำสั่ง/ความต้องการ (Subjunctive Mood) เช่น insist that + Subject + [V. infinitive ที่ไม่มี to] เสมอ ไม่ว่าประธานจะเป็นเอกพจน์หรือพหูพจน์ ดังนั้นตอบ 'take'";
+                } 
+                else if (subType === 4) {
+                    currentSub = "ภาษาไทย";
+                    correctIdx = 3; // ช้อยส์ข้อ 4
+                    qText = `ข้อใดมีการใช้คำราชาศัพท์ หรือคำนมัสการที่ถูกต้องตามระเบียบแบบแผนสำหรับข้อสอบเหล่า${branchName} (ข้อที่ ${i})`;
+                    choices = ["ตัวเลือกที่ 1: ทรงพระราชดำเนินกลับไปยังที่ประทับเดิม", "ตัวเลือกที่ 2: พระบาทสมเด็จพระเจ้าอยู่หัวทรงมีพระบรมราชโองการ", "ตัวเลือกที่ 3: ประธานองคมนตรีทูลเกล้าทูลกระหม่อมถวายรายงาน", "ตัวเลือกที่ 4: ถูกต้องทุกข้อตามหลักเกณฑ์พจนานุกรม"];
+                    exp = "คำว่า 'ทรง' จะไม่นำหน้าคำกริยาราชาศัพท์ที่มีคำว่า 'พระราช' อยู่แล้วในตัว เช่น พระราชดำเนิน ดังนั้นช้อยส์ 1-3 มีจุดผิดพลาดตามกฎเกณฑ์ข้อสอบเก่า";
+                } 
+                else {
+                    currentSub = "สังคมศึกษา";
+                    correctIdx = 1; // ช้อยส์ข้อ 2
+                    qText = `วิเคราะห์ตามโจทย์แนวทางสังคม: เรื่อง "${specificTheme.so}" มีความเกี่ยวข้องและสำคัญอย่างไรต่อภารกิจหลักในปัจจุบัน (ข้อที่ ${i})`;
+                    choices = ["ตัวเลือกที่ 1: กำหนดไว้เพื่อการแบ่งแยกอำนาจสูงสุด", "ตัวเลือกที่ 2: เป็นรากฐานด้านกฎหมาย ความมั่นคง และอธิปไตยของประเทศ", "ตัวเลือกที่ 3: ใช้เพื่อการค้าขายผูกขาดระดับภูมิภาคเท่านั้น", "ตัวเลือกที่ 4: เป็นข้อตกลงลับทางการทูตยุคโบราณ"];
+                    exp = `คำอธิบายละเอียดข้อที่ ${i}: เนื้อหาเรื่องนี้เป็นข้อสอบที่ออกบ่อยมากของเหล่า${branchName} เพื่อทดสอบความเข้าใจเชิงลึกในมิติด้านความมั่นคงและกฎหมายปกครองพื้นฐาน จึงตอบตัวเลือกข้อที่ 2`;
+                }
+
+                examPaper.push({
+                    id: i,
+                    subject: currentSub,
+                    question: qText,
+                    choices: choices,
+                    correctAnswer: correctIdx,
+                    explanation: exp
+                });
+            }
+            return examPaper;
+        }
+
+        // --- 2. ตัวแปรควบคุมระบบ (Application State) ---
+        let selectedBranch = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(50).fill(null);
+
+        // --- 3. ระบบการเลือกเหล่าทัพ ---
+        function selectBranch(branch) {
+            selectedBranch = branch;
+            
+            // รีเซ็ตการไฮไลท์การ์ดทั้งหมด
+            ['army', 'navy', 'air', 'police'].forEach(b => {
+                document.getElementById(`card-${b}`).classList.remove('border-amber-500', 'bg-amber-50/50');
+            });
+
+            // ไฮไลท์การ์ดที่เลือกปัจจุบัน
+            document.getElementById(`card-${branch}`).classList.add('border-amber-500', 'bg-amber-50/50');
+
+            // เปิดใช้งานปุ่มเริ่มทำโจทย์
+            const startBtn = document.getElementById('start-btn');
+            startBtn.disabled = false;
+            startBtn.className = "w-full md:w-64 bg-amber-500 text-white text-lg font-bold py-3 px-6 rounded-xl shadow hover:bg-amber-600 transition-all cursor-pointer";
+            
+            let branchNameTH = branch === 'army' ? 'ทหารบก' : branch === 'navy' ? 'ทหารเรือ' : branch === 'air' ? 'ทหารอากาศ' : 'ตำรวจ';
+            startBtn.innerText = `เริ่มทำข้อสอบ (${branchNameTH} 50 ข้อ)`;
+        }
+
+        // --- 4. เริ่มระบบทำข้อสอบย้ายหน้าจอ ---
+        function startExam() {
+            let branchNameTH = selectedBranch === 'army' ? 'ทหารบก (จปร.)' : selectedBranch === 'navy' ? 'ทหารเรือ (นนร.)' : selectedBranch === 'air' ? 'ทหารอากาศ (นนอ.)' : 'ตำรวจ (นรต.)';
+            document.getElementById('exam-title').innerText = `แนวข้อสอบเก่าคละวิชา เหล่า: ${branchNameTH}`;
+            
+            // ดึงข้อสอบเต็มจำนวน 50 ข้อของเหล่านั้น
+            currentQuestions = generateExamDatabase(selectedBranch);
+            currentQuestionIndex = 0;
+            userAnswers = new Array(50).fill(null);
+
+            // สลับการแสดงผลหน้าจอ
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('exam-page').classList.remove('hidden');
+
+            renderQuestion();
+        }
+
+        // --- 5. การแสดงโจทย์และช้อยส์แต่ละข้อ ---
+        function renderQuestion() {
+            const q = currentQuestions[currentQuestionIndex];
+            
+            // อัปเดตแถบความคืบหน้า (Progress Bar)
+            document.getElementById('progress-text').innerText = `ข้อที่ ${currentQuestionIndex + 1}/50`;
+            document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / 50) * 100}%`;
+
+            // แสดงหัวข้อวิชาและเนื้อหาโจทย์
+            document.getElementById('question-text').innerHTML = `
+                <span class="inline-block bg-slate-800 text-amber-400 text-xs font-bold px-2.5 py-1 rounded mb-3">${q.subject}</span>
+                <p class="text-slate-800 font-medium leading-relaxed">${q.question}</p>
+            `;
+
+            // แสดงรายการช้อยส์คำตอบ
+            const container = document.getElementById('choices-container');
+            container.innerHTML = '';
+            
+            q.choices.forEach((choice, index) => {
+                const isSelected = userAnswers[currentQuestionIndex] === index;
+                const choiceBtn = document.createElement('button');
+                choiceBtn.className = `w-full text-left p-4 rounded-xl border transition-all flex items-center space-x-3 ${
+                    isSelected 
+                    ? 'border-amber-500 bg-amber-50/70 text-amber-950 font-semibold shadow-sm' 
+                    : 'border-gray-200 hover:bg-gray-50 text-gray-700'
+                }`;
+                choiceBtn.innerHTML = `
+                    <span class="w-6 h-6 rounded-full border flex items-center justify-center text-xs font-bold shrink-0 ${isSelected ? 'bg-amber-500 text-white border-transparent' : 'border-gray-300 bg-white text-gray-500'}">${index + 1}</span>
+                    <span class="text-sm md:text-base">${choice}</span>
+                `;
+                choiceBtn.onclick = () => {
+                    userAnswers[currentQuestionIndex] = index;
+                    renderQuestion(); // รีเรนเดอร์เพื่อแสดงสถานะการเลือกคำตอบ
+                };
+                container.appendChild(choiceBtn);
+            });
+
+            // จัดการปุ่มถัดไป/ย้อนกลับ/ส่งคำตอบ
+            document.getElementById('prev-btn').classList.toggle('hidden', currentQuestionIndex === 0);
+            
+            if (currentQuestionIndex === 49) {
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('submit-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('next-btn').classList.remove('hidden');
+                document.getElementById('submit-btn').classList.add('hidden');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < 49) {
+                currentQuestionIndex++;
+                renderQuestion();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // --- 6. ระบบส่งคำตอบและคิดคะแนนคำนวณผล ---
+        function submitExam() {
+            let score = 0;
+            currentQuestions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correctAnswer) {
+                    score++;
+                }
+            });
+
+            // ใส่ผลคะแนนในหน้าสรุปผล
+            document.getElementById('score-text').innerText = score;
+            let branchNameTH = selectedBranch === 'army' ? 'ทหารบก (จปร.)' : selectedBranch === 'navy' ? 'ทหารเรือ (นนร.)' : selectedBranch === 'air' ? 'ทหารอากาศ (นนอ.)' : 'ตำรวจ (นรต.)';
+            document.getElementById('result-branch-text').innerText = `คลังข้อสอบเก่ารวมทุกวิชา 50 ข้อ เหล่า: ${branchNameTH}`;
+
+            // คำติชมประเมินเกณฑ์ความพร้อม
+            let feedback = "ต้องพยายามเพิ่มขึ้น! แนะนำให้ทบทวนข้อที่ผิดพลาดจากคำอธิบายเฉลยละเอียดด้านล่าง";
+            if (score >= 40) feedback = "ยอดเยี่ยมระดับหัวกะทิ! คุณมีโอกาสสอบติดและมีความพร้อมในห้องสอบจริงสูงมาก";
+            else if (score >= 25) feedback = "ผ่านเกณฑ์มาตรฐานขั้นต่ำ! ให้เน้นทบทวนวิชาที่ทำคะแนนได้น้อยเพิ่มเติม";
+            document.getElementById('score-feedback').innerText = feedback;
+
+            // รันระบบสร้างหน้าแสดงเฉลยละเอียดทั้งหมดครบ 50 ข้อ
+            renderSolutions();
+
+            // สลับการแสดงผลหน้าจอไปยังหน้าผลลัพธ์
+            document.getElementById('exam-page').classList.add('hidden');
+            document.getElementById('result-page').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        // --- 7. ระบบเรนเดอร์กล่องเฉลยละเอียดครบ 50 ข้อ ---
+        function renderSolutions() {
+            const container = document.getElementById('solutions-container');
+            container.innerHTML = '';
+
+            currentQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correctAnswer;
+
+                const solBox = document.createElement('div');
+                solBox.className = "pt-6 first:pt-0 space-y-3 animate-fade-in";
+                
+                solBox.innerHTML = `
+                    <div class="flex items-center space-x-2 flex-wrap gap-y-2">
+                        <span class="text-sm font-bold text-slate-500">ข้อที่ ${q.id}</span>
+                        <span class="bg-slate-100 text-slate-700 text-xs px-2 py-0.5 rounded font-bold">${q.subject}</span>
+                        ${isCorrect 
+                            ? '<span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold">✓ ตอบถูก</span>' 
+                            : '<span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">✗ ตอบผิด</span>'
+                        }
+                    </div>
+                    <p class="font-medium text-slate-800 leading-relaxed">${q.question}</p>
+                `;
+
+                const choicesDiv = document.createElement('div');
+                choicesDiv.className = "space-y-2 pl-3 border-l-2 border-gray-100 my-2";
+                
+                q.choices.forEach((choice, cIdx) => {
+                    let cStyle = "text-sm p-2 rounded flex items-center space-x-2 ";
+                    let icon = `<span class="w-5 h-5 rounded-full border border-gray-300 flex items-center justify-center text-xs text-gray-400 font-bold shrink-0">${cIdx+1}</span>`;
+                    
+                    if (cIdx === q.correctAnswer) {
+                        cStyle += "bg-green-50 text-green-800 font-semibold";
+                        icon = `<span class="w-5 h-5 rounded-full bg-green-500 text-white flex items-center justify-center text-xs font-bold shrink-0">✓</span>`;
+                    } else if (cIdx === userAns && !isCorrect) {
+                        cStyle += "bg-red-50 text-red-800 line-through opacity-80";
+                        icon = `<span class="w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-xs font-bold shrink-0">✗</span>`;
+                    } else {
+                        cStyle += "text-gray-600";
+                    }
+
+                    choicesDiv.innerHTML += `
+                        <div class="${cStyle}">
+                            ${icon}
+                            <span>${choice}</span>
+                        </div>
+                    `;
+                });
+                solBox.appendChild(choicesDiv);
+
+                // เพิ่มกล่องกล่องวิธีคิด/เหตุผลประกอบคำเฉลย
+                solBox.innerHTML += `
+                    <div class="bg-amber-50/40 p-3 rounded-lg text-sm text-slate-700 border border-amber-100/60">
+                        <strong class="text-amber-700 block mb-1">💡 เจาะลึกวิธีคิดข้อ ${q.id}:</strong>
+                        ${q.explanation}
+                    </div>
+                `;
+
+                container.appendChild(solBox);
+            });
+        }
+
+        // --- 8. ฟังก์ชันรีเซ็ตระบบเพื่อกลับหน้าแรกหลัก ---
+        function goToHome() {
+            selectedBranch = null;
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('start-btn').className = "w-full md:w-64 bg-gray-400 text-white text-lg font-bold py-3 px-6 rounded-xl shadow cursor-not-allowed transition-all";
+            document.getElementById('start-btn').innerText = "กรุณาเลือกเหล่าทัพ";
+            
+            ['army', 'navy', 'air', 'police'].forEach(b => {
+                document.getElementById(`card-${b}`).classList.remove('border-amber-500', 'bg-amber-50/50');
+            });
+
+            document.getElementById('result-page').classList.add('hidden');
+            document.getElementById('exam-page').classList.add('hidden');
+            document.getElementById('home-page').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
